@@ -11,9 +11,6 @@ const headingStyles = {
   color: "#232129",
   fontDecoration: "none",
   marginTop: 0,
-  position:"absolute",
-  bottom:0,
-  left:"50%",
   marginBottom: 64,
 }
 const headingAccentStyles = {
@@ -144,7 +141,7 @@ const links = [
 const IndexPage = () => {
   return (
     <main style={pageStyles}>
-            <img src="https://www.wallpaperup.com/uploads/wallpapers/2014/09/25/455955/45cc249825d1d76d509d0aa81a67adb5.jpg" width="100%" height="100%" alt="under-construction"/>
+            <img src="https://www.wallpaperup.com/uploads/wallpapers/2014/09/25/455955/45cc249825d1d76d509d0aa81a67adb5.jpg" width="100%" height="90%" alt="under-construction"/>
       <a href="../old-portfolio">
       <h1 style={headingStyles}>
         This website is currently being worked on but here is the old portfolio.
