@@ -2,14 +2,19 @@ import * as React from "react"
 import type { HeadFC } from "gatsby"
 
 const pageStyles = {
-  color: "#232129",
-  padding: 96,
+  backgroundColor: "#232129",
+  padding: 0,
+  margin: 0,
   fontFamily: "-apple-system, Roboto, sans-serif, serif",
 }
 const headingStyles = {
+  color: "#232129",
+  fontDecoration: "none",
   marginTop: 0,
+  position:"absolute",
+  bottom:0,
+  left:"50%",
   marginBottom: 64,
-  maxWidth: 320,
 }
 const headingAccentStyles = {
   color: "#663399",
