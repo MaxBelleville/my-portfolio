@@ -29,6 +29,7 @@ export default function StickyFooter() {
           {'Do not worry it should be done by march 2023'}
           {'If not you can always remind me via an email. Thanks for your patience.'}
         </Typography>
+        <Typography variant="body1"><a href='https://maxbelleville.github.io/old-portfolio/'>Go to the old portfolio.</a></Typography>
       </Container>
     </Box>
   );
