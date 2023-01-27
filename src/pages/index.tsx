@@ -23,7 +23,8 @@ export default function StickyFooter() {
           Sadly, This website is currently being worked on.
         </Typography>
         <Typography variant="h5" component="h2" gutterBottom>
-          {'Do not worry it should be done by march 2023'}
+          {'Do not worry it should be done by march 2023.'}
+          <br/>
           {'If not you can always remind me via an email. Thanks for your patience.'}
         </Typography>
         <Typography variant="body1"><a href='https://maxbelleville.github.io/old-portfolio/'>Go to the old portfolio</a></Typography>
