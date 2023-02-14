@@ -1,0 +1,17 @@
+h1,h2,h3 {
+    font-family: 'Pacifico', 'Arial Narrow', Arial, sans-serif;
+    margin-top: 5;
+    margin-bottom: 0;
+}
+p {
+    font-family:'Raleway','Times New Roman', Times, serif;
+    margin-top: 5;
+    margin-bottom: 0;
+    font-weight: 400;
+}
+
+.highlight {
+    font-family:'Raleway','Times New Roman', Times, serif;
+    font-weight: 500;
+    color:white
+}
