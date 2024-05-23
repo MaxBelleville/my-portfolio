@@ -42,5 +42,3 @@ export function Planet2(props:any) {
     </group>
   )
 }
-
-useGLTF.preload('./assets/planet2.gltf')

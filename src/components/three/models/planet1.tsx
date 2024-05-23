@@ -45,4 +45,3 @@ export function Planet1(props:any) {
   )
 }
 
-useGLTF.preload('./assets/planet1.gltf')

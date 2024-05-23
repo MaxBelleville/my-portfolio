@@ -31,4 +31,3 @@ export function Planet4(props:any) {
   )
 }
 
-useGLTF.preload('./assets/planet4.gltf')

@@ -1,0 +1,54 @@
+.scene{
+    width:100vw;
+    height:100vh;
+}
+
+.canvas{
+    background: #111;
+}
+
+.pageContainer {
+    height:100vh; width:100vw; 
+    position: absolute;
+    --mask: 
+    linear-gradient(0deg,#0000 50px,#000 0) 0 25px,
+    radial-gradient(25px,#000 98%,#0000) 50%/46.25px 50px repeat space;
+    background-color: rgba(0,0,10,0.75);
+    -webkit-mask: var(--mask);
+    mask: var(--mask);
+    padding: 25px;
+}
+.first {
+    --mask: linear-gradient(0deg,#0000 15px,#000 0) 0 0px,
+    radial-gradient(25px,#000 98%,#0000) 50%/46.25px 50px repeat space;
+    filter: blur(0);
+}
+.second {
+    background-image: url("../../public/assets/desserts-app.png");
+    background-repeat: no-repeat;
+    background-size:contain;
+    padding-right: 150px;
+    filter: blur(2);
+    
+}
+.third {
+    background-image: url("../../public/assets/obj.png");
+    background-repeat: no-repeat;
+    background-size:100% 150%;
+    background-position: 0% 50%;
+    filter: blur(5);
+}
+.fourth {
+    background-image: url("../../public/assets/tmu-portal.png");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    filter: blur(7);
+}
+.fifth {
+    top: "800vh";
+    filter: blur(9);
+}
+.sixth {
+    top: "1000vh";
+    filter: blur(11);
+}

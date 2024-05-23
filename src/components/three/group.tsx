@@ -1,7 +1,7 @@
 "use client";
-import React, { useRef } from "react";
+import React, { Suspense, useRef } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { Sky, Sparkles, Stars, useScroll } from '@react-three/drei'
+import { Sky, Sparkles, Stars, useScroll} from '@react-three/drei'
 import Box from "./box";
 import { Group, Object3DEventMap } from "three";
 import { Planet1 } from "./models/planet1";
@@ -28,6 +28,7 @@ export default function GroupMesh(props:any) {
       <Planet5/>
       <Planet6/>
       <ShipPath/>
+      
     </group>
   );
 }

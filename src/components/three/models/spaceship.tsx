@@ -28,5 +28,3 @@ export const Spaceship = forwardRef(function Spaceship(props, ref) {
     </group>
   );
 });
-
-useGLTF.preload("./assets/spaceship.gltf");

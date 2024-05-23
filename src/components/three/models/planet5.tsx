@@ -30,5 +30,3 @@ export function Planet5(props:any) {
     </group>
   )
 }
-
-useGLTF.preload('./assets/planet5.gltf')

@@ -33,4 +33,3 @@ export function Planet6(props:any) {
   )
 }
 
-useGLTF.preload('./assets/planet6.gltf')
