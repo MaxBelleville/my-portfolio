@@ -1,62 +1,58 @@
 "use client";
 import React, { useMemo, useRef } from "react";
-import {
-  Canvas,
-  useFrame,
-  useThree,
-} from "@react-three/fiber";
-import {
-  CatmullRomLine,
-  Sky,
-  Sparkles,
-  Stars,
-  useScroll,
-} from "@react-three/drei";
-import Box from "./box";
-import { Planet1 } from "./models/planet1";
-import { Planet2 } from "./models/planet2";
-import { Planet4 } from "./models/planet4";
-import { Planet5 } from "./models/planet5";
-import { Planet6 } from "./models/planet6";
-import { Planet3 } from "./models/planet3";
+import { useFrame } from "@react-three/fiber";
+import { useScroll } from "@react-three/drei";
+
 import { Spaceship } from "./models/spaceship";
 
+const LINE_NB_POINTS = 500;
 
-const LINE_NB_POINTS = 600;
-
-import { CatmullRomCurve3, Group, Mesh, Shape, Vector3 } from "three";
+import {
+  CatmullRomCurve3,
+  Group,
+  Matrix4,
+  Mesh,
+  Quaternion,
+  Shape,
+  Vector3,
+} from "three";
 export default function ShipPath(props: any) {
   const group = useRef();
   const spaceship = useRef<Group>();
-  const scroll= useScroll();
-  const points: [number, number, number][] = [
+  const scroll = useScroll();
 
-  ];
-  var oldScroll = scroll.offset;
+  const lastScroll = useRef(0);
+  const scrollDir = useRef(1); // 1 forward, -1 backwards
+
+  const slerpSpeed = useRef(0.1);
+  const directionBuffer = useRef(0);
+
+  const framePos = new Vector3();
+  const frameFuture = new Vector3();
+  const targetQuat = new Quaternion();
+  const frameMat = new Matrix4();
+  const hysteresis = 0.01;
+  const threshold = 0.00001;
 
   const curve = useMemo(() => {
     return new CatmullRomCurve3(
       [
-        new Vector3(2,0,-2),
-        new Vector3(3,-1,0),
-        new Vector3(0,-4,0),
-        new Vector3(-3,-8,0),
-        new Vector3(0,-12,-7),
-        new Vector3(3,-16,-3),
-        new Vector3(0,-20,-3),
-        new Vector3(-3,-24,0),
-        new Vector3(3,-28,0),
-        new Vector3(0,-30,-4),
+        new Vector3(0, 0, -6),
+        new Vector3(3, -4, -3),
+        new Vector3(0, -8, 0),
+        new Vector3(-3, -12, -3),
+        new Vector3(0, -16, -6),
+        new Vector3(3, -20, -3),
+        new Vector3(0, -24, 0),
+        new Vector3(-3, -28, -3),
+        new Vector3(0, -32, -6),
+        new Vector3(3, -36, -3),
       ],
       false,
       "catmullrom",
       0.5
-    )
-  },[]);
-
-  const linePoints = useMemo(() => {
-    return curve.getPoints(LINE_NB_POINTS);
-  }, [curve]);
+    );
+  }, []);
 
   const shape = useMemo(() => {
     const shape = new Shape();
@@ -66,51 +62,47 @@ export default function ShipPath(props: any) {
     return shape;
   }, []);
 
+  useFrame((state, delta) => {
+    const diff = scroll.offset - lastScroll.current;
 
-  useFrame((state,delta)=>{
-    try {
-      var pos = new Vector3(0,0,0);
-      var future = new Vector3(0,0,0);
-      var diff = scroll.offset - oldScroll;
-      curve.getPointAt(scroll.offset,pos); 
-      var offset = (scroll.offset+0.01);
-      if(diff < 0)offset =(scroll.offset-0.01);
-      if(offset>1)offset=1; 
-      if(offset<0)offset=0; 
-      curve.getPointAt(offset,future);
-      var axis= new Vector3(0, 0, 0);
-      curve.getTangentAt(offset,axis)
-      var angle = -Math.PI * 0.5;
-      var lookAt = new Vector3(0,0,0);
-      if(diff >= 0) {
-        axis=axis.normalize().multiply(new Vector3(-1,-1,-0.25));
-        lookAt=future.clone().applyAxisAngle(axis, angle);
-      }
-      else {
-        axis=axis.normalize().multiply(new Vector3(1,-1,1));
-        angle = Math.PI * 0.75;
-        lookAt= future.clone().applyAxisAngle(axis, angle);
-        lookAt.setY(1);
-      }
-      
-      if(spaceship.current) {
-        spaceship.current.position.copy(pos);
-        spaceship.current.lookAt(lookAt);
+    if (Math.abs(diff) > threshold) {
+      const newDir = diff > 0 ? 1 : -1;
+      directionBuffer.current += diff;
 
+      if (Math.abs(directionBuffer.current) > hysteresis) {
+        scrollDir.current = newDir;
+        directionBuffer.current = 0;
       }
+
+      //Reset the speed if direction changed
+      if (scrollDir.current !== newDir) slerpSpeed.current = 0.0;
     }
-    catch (e){
+    lastScroll.current = scroll.offset;
 
-    }
-    oldScroll=scroll.offset;
-  })
+    //Slowly adjust to target
+    slerpSpeed.current += (0.1 - slerpSpeed.current) * 0.05;
 
+    const t = scroll.offset;
+    const futureT = Math.min(Math.max(t + scrollDir.current * 0.02, 0), 1);
+
+    curve.getPointAt(t, framePos);
+    curve.getPointAt(futureT, frameFuture);
+
+    if (!spaceship.current) return;
+
+    spaceship.current.position.lerp(framePos, 0.2);
+
+    frameMat.lookAt(framePos, frameFuture, new Vector3(0, 1, 0));
+    targetQuat.setFromRotationMatrix(frameMat);
+
+    spaceship.current.quaternion.slerp(targetQuat, slerpSpeed.current);
+  });
 
   return (
     <group position={[0, 0, 0]} {...props} ref={group}>
       <Spaceship ref={spaceship} />
       <group>
-        <mesh >
+        <mesh>
           <extrudeGeometry
             args={[
               shape,
@@ -121,7 +113,15 @@ export default function ShipPath(props: any) {
               },
             ]}
           />
-          <meshStandardMaterial color={"white"} opacity={0.0} transparent />
+          <meshBasicMaterial
+            color={"white"}
+            fog={false}
+            opacity={0.0}
+            transparent={true}
+            wireframe={true}
+            wireframeLinewidth={0}
+            lightMapIntensity={0}
+          />
         </mesh>
       </group>
     </group>

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import BackgroundCanvas from "../components/three/canvas";
+import BackgroundCanvas from "../components/three/BackgroundCanvas";
 
 export const metadata: Metadata = {
   title: "Home",
@@ -7,11 +7,9 @@ export const metadata: Metadata = {
 };
 
 export default function Home() {
-
   return (
     <main>
-      <BackgroundCanvas/>
+      <BackgroundCanvas />
     </main>
   );
-  
 }
